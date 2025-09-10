@@ -1,6 +1,0 @@
-C:/Users/Roman/Desktop/DronePositionHoldSimulation/cmake-build-release/CMakeFiles/DronePositionHoldSimulation.dir
-C:/Users/Roman/Desktop/DronePositionHoldSimulation/cmake-build-release/CMakeFiles/edit_cache.dir
-C:/Users/Roman/Desktop/DronePositionHoldSimulation/cmake-build-release/CMakeFiles/rebuild_cache.dir
-C:/Users/Roman/Desktop/DronePositionHoldSimulation/cmake-build-release/lib/SimulationAPI/CMakeFiles/SimulationAPI.dir
-C:/Users/Roman/Desktop/DronePositionHoldSimulation/cmake-build-release/lib/SimulationAPI/CMakeFiles/edit_cache.dir
-C:/Users/Roman/Desktop/DronePositionHoldSimulation/cmake-build-release/lib/SimulationAPI/CMakeFiles/rebuild_cache.dir

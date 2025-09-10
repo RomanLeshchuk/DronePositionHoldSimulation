@@ -1,9 +1,0 @@
-# ninja log v6
-1	11379	7792118424339853	lib/DroneSimulationAPI/CMakeFiles/DroneSimulationAPI.dir/src/RemoteAPIClient.cpp.obj	79d45f78bba6e426
-4	196	7792136911835396	build.ninja	ce90e9857c0153ce
-11379	11491	7792118538114619	lib/DroneSimulationAPI/libDroneSimulationAPI.a	bbd94967dcd446cc
-2544	3507	7792119982105340	DroneSimulation.exe	9c3971c98c176082
-5	2552	7792136946147296	CMakeFiles/DronePositionHoldSimulation.dir/src/main.cpp.obj	8747d121712d109a
-2	11115	7792136946117293	lib/SimulationAPI/CMakeFiles/SimulationAPI.dir/src/RemoteAPIClient.cpp.obj	307aa32e6e5b71f9
-11115	11224	7792137057241544	lib/SimulationAPI/libSimulationAPI.a	70213874bddcce96
-11233	12212	7792137058423387	DronePositionHoldSimulation.exe	1191bc2fa06c0054

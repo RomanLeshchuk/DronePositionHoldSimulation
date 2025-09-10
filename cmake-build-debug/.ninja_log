@@ -1,5 +1,0 @@
-# ninja log v6
-2	197	7792136911835396	build.ninja	5ab4b5e681751a99
-5	6181	7792109432182821	lib/DroneSimulationAPI/CMakeFiles/DroneSimulationAPI.dir/src/RemoteAPIClient.cpp.obj	f4155b3f06b886c4
-6190	11373	7792109494037587	lib/DroneSimulationAPI/libDroneSimulationAPI.a	bbd94967dcd446cc
-2599	9836	7792118015089144	DroneSimulation.exe	7654f60b249089ce

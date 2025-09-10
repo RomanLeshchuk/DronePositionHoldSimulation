@@ -1,3 +1,0 @@
-C:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/cmake-build-release/CMakeFiles/DroneSimulationAPI.dir
-C:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/cmake-build-release/CMakeFiles/edit_cache.dir
-C:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/cmake-build-release/CMakeFiles/rebuild_cache.dir
