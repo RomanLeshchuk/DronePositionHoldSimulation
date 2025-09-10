@@ -43,3 +43,6 @@
 # CLion project files
 .idea
 cmake-build-*
+
+# PVS studio
+.PVS-Studio
