@@ -1,0 +1,3 @@
+C:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/cmake-build-debug/CMakeFiles/DroneSimulationAPI.dir
+C:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/cmake-build-debug/CMakeFiles/rebuild_cache.dir

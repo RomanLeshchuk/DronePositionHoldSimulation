@@ -1,0 +1,140 @@
+[
+    {
+        "arguments": [
+            "C:\\Program Files\\JetBrains\\CLion 2024.3.3\\bin\\mingw\\bin\\g++.exe",
+            "-DSIM_REMOTEAPICLIENT_OBJECTS",
+            "-IC:/Users/Roman/Desktop/DroneSimulation/include",
+            "-IC:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/include",
+            "-isystemC:/vcpkg/installed/x64-windows/include",
+            "-g",
+            "-std=gnu++23",
+            "-fdiagnostics-color=always",
+            "-DPVS_STUDIO",
+            "-DPVS_VERSION_MAJOR=7",
+            "-DPVS_VERSION_MINOR=37",
+            "C:\\Users\\Roman\\Desktop\\DroneSimulation\\src\\main.cpp"
+        ],
+        "dependencies": [],
+        "id": 4
+    },
+    {
+        "arguments": [
+            "C:\\Program Files\\JetBrains\\CLion 2024.3.3\\bin\\mingw\\bin\\g++.exe",
+            "-DSIM_REMOTEAPICLIENT_OBJECTS",
+            "-IC:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/include",
+            "-g",
+            "-std=gnu++23",
+            "-fdiagnostics-color=always",
+            "-DPVS_STUDIO",
+            "-DPVS_VERSION_MAJOR=7",
+            "-DPVS_VERSION_MINOR=37",
+            "C:\\Users\\Roman\\Desktop\\DroneSimulation\\lib\\DroneSimulationAPI\\src\\RemoteAPIClient.cpp"
+        ],
+        "dependencies": [],
+        "id": 1
+    },
+    {
+        "arguments": [
+            "C:\\Program Files\\JetBrains\\CLion 2024.3.3\\bin\\mingw\\bin\\g++.exe",
+            "-DSIM_REMOTEAPICLIENT_OBJECTS",
+            "-IC:/Users/Roman/Desktop/DroneSimulation/include",
+            "-IC:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/include",
+            "-isystemC:/vcpkg/installed/x64-windows/include",
+            "-DNDEBUG",
+            "-std=gnu++23",
+            "-fdiagnostics-color=always",
+            "-DPVS_STUDIO",
+            "-DPVS_VERSION_MAJOR=7",
+            "-DPVS_VERSION_MINOR=37",
+            "C:\\Users\\Roman\\Desktop\\DroneSimulation\\src\\main.cpp"
+        ],
+        "dependencies": [],
+        "id": 6
+    },
+    {
+        "arguments": [
+            "C:\\Program Files\\JetBrains\\CLion 2024.3.3\\bin\\mingw\\bin\\g++.exe",
+            "-DSIM_REMOTEAPICLIENT_OBJECTS",
+            "-IC:/Users/Roman/Desktop/DroneSimulation/include",
+            "-IC:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/include",
+            "-g",
+            "-std=gnu++23",
+            "-fdiagnostics-color=always",
+            "-DPVS_STUDIO",
+            "-DPVS_VERSION_MAJOR=7",
+            "-DPVS_VERSION_MINOR=37",
+            "C:\\Users\\Roman\\Desktop\\DroneSimulation\\src\\main.cpp"
+        ],
+        "dependencies": [],
+        "id": 2
+    },
+    {
+        "arguments": [
+            "C:\\Program Files\\JetBrains\\CLion 2024.3.3\\bin\\mingw\\bin\\g++.exe",
+            "-DSIM_REMOTEAPICLIENT_OBJECTS",
+            "-IC:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/include",
+            "-isystemC:/vcpkg/installed/x64-windows/include",
+            "-g",
+            "-std=gnu++23",
+            "-fdiagnostics-color=always",
+            "-DPVS_STUDIO",
+            "-DPVS_VERSION_MAJOR=7",
+            "-DPVS_VERSION_MINOR=37",
+            "C:\\Users\\Roman\\Desktop\\DroneSimulation\\lib\\DroneSimulationAPI\\src\\RemoteAPIClient.cpp"
+        ],
+        "dependencies": [],
+        "id": 3
+    },
+    {
+        "arguments": [
+            "C:\\Program Files\\JetBrains\\CLion 2024.3.3\\bin\\mingw\\bin\\g++.exe",
+            "-DSIM_REMOTEAPICLIENT_OBJECTS",
+            "-IC:/Users/Roman/Desktop/DroneSimulation/lib/DroneSimulationAPI/include",
+            "-isystemC:/vcpkg/installed/x64-windows/include",
+            "-DNDEBUG",
+            "-std=gnu++23",
+            "-fdiagnostics-color=always",
+            "-DPVS_STUDIO",
+            "-DPVS_VERSION_MAJOR=7",
+            "-DPVS_VERSION_MINOR=37",
+            "C:\\Users\\Roman\\Desktop\\DroneSimulation\\lib\\DroneSimulationAPI\\src\\RemoteAPIClient.cpp"
+        ],
+        "dependencies": [],
+        "id": 5
+    },
+    {
+        "arguments": [
+            "C:\\Program Files\\JetBrains\\CLion 2024.3.3\\bin\\mingw\\bin\\g++.exe",
+            "-DSIM_REMOTEAPICLIENT_OBJECTS",
+            "-IC:/Users/Roman/Desktop/DronePositionHoldSimulation/lib/SimulationAPI/include",
+            "-isystemC:/vcpkg/installed/x64-windows/include",
+            "-DNDEBUG",
+            "-std=gnu++23",
+            "-fdiagnostics-color=always",
+            "-DPVS_STUDIO",
+            "-DPVS_VERSION_MAJOR=7",
+            "-DPVS_VERSION_MINOR=37",
+            "C:\\Users\\Roman\\Desktop\\DronePositionHoldSimulation\\lib\\SimulationAPI\\src\\RemoteAPIClient.cpp"
+        ],
+        "dependencies": [],
+        "id": 7
+    },
+    {
+        "arguments": [
+            "C:\\Program Files\\JetBrains\\CLion 2024.3.3\\bin\\mingw\\bin\\g++.exe",
+            "-DSIM_REMOTEAPICLIENT_OBJECTS",
+            "-IC:/Users/Roman/Desktop/DronePositionHoldSimulation/include",
+            "-IC:/Users/Roman/Desktop/DronePositionHoldSimulation/lib/SimulationAPI/include",
+            "-isystemC:/vcpkg/installed/x64-windows/include",
+            "-DNDEBUG",
+            "-std=gnu++23",
+            "-fdiagnostics-color=always",
+            "-DPVS_STUDIO",
+            "-DPVS_VERSION_MAJOR=7",
+            "-DPVS_VERSION_MINOR=37",
+            "C:\\Users\\Roman\\Desktop\\DronePositionHoldSimulation\\src\\main.cpp"
+        ],
+        "dependencies": [],
+        "id": 8
+    }
+]
