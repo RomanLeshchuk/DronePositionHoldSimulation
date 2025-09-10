@@ -44,5 +44,5 @@
 .idea
 cmake-build-*
 
-# PVS studio
+# PVS-Studio
 .PVS-Studio
