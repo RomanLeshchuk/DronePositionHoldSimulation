@@ -2,7 +2,6 @@
 #define DRONE_H
 
 #include <array>
-#include <string>
 #include <cstdint>
 #include <cmath>
 
@@ -15,6 +14,7 @@ public:
 
     explicit Drone(RemoteAPIObject::sim& sim) :
         m_sim{ &sim },
+        m_drone{ sim.getObject("/Quadcopter/base/target") },
         m_respondables{
             sim.getObject("/Quadcopter/propeller[0]/respondable"),
             sim.getObject("/Quadcopter/propeller[1]/respondable"),
@@ -24,6 +24,7 @@ public:
         m_visionSensor{ sim.getObject("/Quadcopter/visionSensor") },
         m_gyroSensorScript{ sim.getScript(sim.scripttype_childscript, "/Quadcopter/gyroSensor/Script") }
     {
+        std::cout << m_drone << std::endl;
     }
 
     [[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::vector<std::int64_t>> getImage() const
@@ -45,6 +46,11 @@ public:
             data[1].as<double>(),
             data[2].as<double>()
         };
+    }
+
+    [[nodiscard]] double getAltitude() const
+    {
+        return m_sim->getObjectPosition(m_drone)[2];
     }
 
     void setAngularVelocities(const std::array<double, s_propellersCount>& angularVelocities)
@@ -87,6 +93,7 @@ private:
     }
 
     RemoteAPIObject::sim* m_sim;
+    std::int64_t m_drone;
     std::array<std::int64_t, s_propellersCount> m_respondables;
     std::int64_t m_visionSensor;
     std::int64_t m_gyroSensorScript;

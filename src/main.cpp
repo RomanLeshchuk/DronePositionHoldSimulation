@@ -3,71 +3,109 @@
 #include <cstdint>
 #include <windows.h>
 #include <opencv4/opencv2/opencv.hpp>
+#include <execution>
+#include <numeric>
+#include <thread>
 
 #include "RemoteAPIClient.h"
 
 #include "Drone.h"
 
+#include <cmath>
+
 double getVelocity(
     const std::tuple<std::vector<uint8_t>, std::vector<int64_t>>& oldFrame,
     const std::tuple<std::vector<uint8_t>, std::vector<int64_t>>& currFrame,
     const std::vector<double>& gyroData,
-    double dt)
+    double dt,
+    double altitude,             // meters
+    double hfov_deg = 90.0,      // camera horizontal FOV in degrees
+    double vfov_deg = 60.0       // camera vertical FOV in degrees
+)
 {
-    // --- Extract image and resolution ---
+    using namespace cv;
+
+    // --- Validate input ---
     const auto& [oldData, oldRes] = oldFrame;
     const auto& [currData, currRes] = currFrame;
 
-    if (oldRes.size() < 2 || currRes.size() < 2)
-        return -1.0;
+    if (oldRes.size() < 2 || currRes.size() < 2 || dt <= 1e-6 || altitude <= 0)
+        return 0.0;
 
-    int width  = static_cast<int>(oldRes[0]);
-    int height = static_cast<int>(oldRes[1]);
+    const int width  = static_cast<int>(oldRes[0]);
+    const int height = static_cast<int>(oldRes[1]);
 
-    if (oldData.size() < width * height || currData.size() < width * height)
-        return -2.0;
+    if (oldData.size() < static_cast<size_t>(width * height) ||
+        currData.size() < static_cast<size_t>(width * height))
+        return 0.0;
 
-    if (!gyroData.empty() && gyroData.size() < 3)
-        return -3.0;
+    // --- Prepare Mats ---
+    Mat imgOld(height, width, CV_8UC1, const_cast<uint8_t*>(oldData.data()));
+    Mat imgCurr(height, width, CV_8UC1, const_cast<uint8_t*>(currData.data()));
+    Mat oldGray = imgOld.clone();
+    Mat currGray = imgCurr.clone();
 
-    // --- Convert to cv::Mat (grayscale) ---
-    cv::Mat imgOld(height, width, CV_8UC1, const_cast<uint8_t*>(oldData.data()));
-    cv::Mat imgCurr(height, width, CV_8UC1, const_cast<uint8_t*>(currData.data()));
+    // --- Preprocess (light blur) ---
+    cv::GaussianBlur(oldGray, oldGray, Size(5,5), 1.2);
+    cv::GaussianBlur(currGray, currGray, Size(5,5), 1.2);
 
-    // --- Preprocessing: reduce noise ---
-    cv::GaussianBlur(imgOld, imgOld, cv::Size(5,5), 1.0);
-    cv::GaussianBlur(imgCurr, imgCurr, cv::Size(5,5), 1.0);
+    // --- Optical flow ---
+    setUseOptimized(true);
+    setNumThreads(std::thread::hardware_concurrency());
 
-    // --- Calculate dense optical flow ---
-    cv::Mat flow;
-    cv::calcOpticalFlowFarneback(imgOld, imgCurr, flow,
-                                 0.5, 3, 15, 3, 5, 1.2, 0);
+    Mat flow;
+    calcOpticalFlowFarneback(oldGray, currGray, flow,
+                                 0.5, 3, 15, 3, 5, 1.1, OPTFLOW_FARNEBACK_GAUSSIAN);
 
-    // --- Compute average displacement ---
-    cv::Scalar meanFlow = cv::mean(flow);
-    double vx = meanFlow[0]; // horizontal displacement in pixels
-    double vy = meanFlow[1]; // vertical displacement in pixels
+    // --- Compute average flow (parallel) ---
+    const Point2f* flowPtr = flow.ptr<Point2f>(0);
+    const int total = width * height;
 
-    // --- Compensate for rotation if gyro data is provided ---
+    Point2f sum = std::reduce(
+        std::execution::par_unseq,
+        flowPtr, flowPtr + total,
+        Point2f(0.0f, 0.0f),
+        [](const Point2f& a, const Point2f& b) {
+            return Point2f(a.x + b.x, a.y + b.y);
+        });
+
+    double vx_pix = sum.x / total;
+    double vy_pix = sum.y / total;
+
+    // --- Compensate for gyro (approx rotation) ---
     if (gyroData.size() >= 3) {
-        double yaw   = gyroData[0];
-        double pitch = gyroData[1];
-        double roll  = gyroData[2];
+        double yaw   = gyroData[0]; // rad/s
+        double pitch = gyroData[1]; // rad/s
+        // roll ignored for downward camera
 
-        double fx = width / 2.0;   // approximate focal length in pixels
+        // pixels moved due to rotation
+        double fx = width  / 2.0;
         double fy = height / 2.0;
-
-        vx -= -fx * yaw;     // simple rotational compensation (yaw)
-        vy -= -fy * pitch;   // simple rotational compensation (pitch)
-        // roll is ignored for simplicity
+        vx_pix -= fx * yaw * dt;
+        vy_pix -= fy * pitch * dt;
     }
 
-    // --- Convert displacement to velocity (pixels/sec) ---
-    vx /= dt;
-    vy /= dt;
+    // --- Convert pixel motion to ground motion (m/s) ---
+    double hfov = hfov_deg * CV_PI / 180.0;
+    double vfov = vfov_deg * CV_PI / 180.0;
 
-    // --- Return magnitude of velocity ---
-    return std::sqrt(vx*vx + vy*vy);
+    double angle_per_pixel_x = hfov / width;
+    double angle_per_pixel_y = vfov / height;
+
+    // displacement (meters)
+    double dx = altitude * std::tan(vx_pix * angle_per_pixel_x);
+    double dy = altitude * std::tan(vy_pix * angle_per_pixel_y);
+
+    // velocity (m/s)
+    double vx = dx / dt;
+    double vy = dy / dt;
+
+    double velocity = std::sqrt(vx * vx + vy * vy);
+
+    if (!std::isfinite(velocity) || velocity > 200.0) // sanity limit
+        velocity = 0.0;
+
+    return velocity;
 }
 
 int main(int argc, char* argv[])
@@ -92,7 +130,7 @@ int main(int argc, char* argv[])
         {
             std::get<0>(oldFrame) = std::get<0>(newFrame);
         }
-        std::cout << getVelocity(oldFrame, newFrame, drone.getGyroData(), t - prevT) << '\n';
+        std::cout << getVelocity(oldFrame, newFrame, drone.getGyroData(), t - prevT, drone.getAltitude()) << '\n';
 
         if (GetAsyncKeyState(VK_UP))
         {
