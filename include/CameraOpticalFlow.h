@@ -2,21 +2,21 @@
 #define CAMERAOPTICALFLOW_H
 
 #include <opencv2/opencv.hpp>
-#include <utility>
-#include <vector>
-#include <cstdint>
+#include <Drone.h>
 
 class CameraOpticalFlow
 {
 public:
-    explicit CameraOpticalFlow(const std::pair<std::uint64_t, std::uint64_t>& frameSize);
+    explicit CameraOpticalFlow(const Drone& drone);
 
-    std::vector<cv::Point2f> calcOpticalFlow(const cv::Mat& grayFrame);
+    void calc();
+
+    [[nodiscard]] cv::Point2f getOpticalFlowAt(int x, int y) const;
 
 private:
-    std::pair<std::uint64_t, std::uint64_t> m_frameSize;
+    const Drone* m_drone;
     cv::Mat m_prevFrame;
-    bool m_hasPrev = false;
+    cv::Mat m_opticalFlow;
 };
 
 #endif

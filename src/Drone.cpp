@@ -20,11 +20,6 @@ Drone::Drone(RemoteAPIObject::sim& sim) :
     m_cameraFrameSize = { cameraFrameSize[0], cameraFrameSize[1] };
 }
 
-[[nodiscard]] std::pair<int, int> Drone::getImageSize() const
-{
-    return m_cameraFrameSize;
-}
-
 [[nodiscard]] cv::Mat Drone::getGrayscaleImage() const
 {
     std::vector<std::uint8_t> imgBytes = std::get<0>(m_sim->getVisionSensorImg(m_visionSensor));
@@ -39,6 +34,10 @@ Drone::Drone(RemoteAPIObject::sim& sim) :
 
 [[nodiscard]] std::vector<double> Drone::getGyroData() const
 {
+    // gyroData[0] - rotation around horizontal forward-backward axis (roll)
+    // gyroData[1] - rotation around horizontal left-right axis (pitch)
+    // gyroData[2] - rotation around vertical axis (yaw)
+
     json data = m_sim->callScriptFunction("getGyroData", m_gyroSensorScript)[0];
 
     if (!data.is_array())
@@ -58,17 +57,12 @@ Drone::Drone(RemoteAPIObject::sim& sim) :
     return m_sim->getObjectPosition(m_drone)[2];
 }
 
-[[nodiscard]] std::vector<double> Drone::getPos() const
-{
-    return m_sim->getObjectPosition(m_drone);
-}
-
 void Drone::setAngularVelocities(const std::array<double, s_propellersCount>& angularVelocities)
 {
     m_angularVelocities = angularVelocities;
 }
 
-void Drone::update() const
+void Drone::update()
 {
     for (std::uint64_t i = 0; i < s_propellersCount; ++i)
     {

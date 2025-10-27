@@ -2,27 +2,22 @@
 
 #include "CameraOpticalFlow.h"
 
-CameraOpticalFlow::CameraOpticalFlow(const std::pair<std::uint64_t, std::uint64_t>& frameSize) :
-    m_frameSize{ frameSize }
+CameraOpticalFlow::CameraOpticalFlow(const Drone& drone) :
+    m_drone{ &drone }
 {
 }
 
-std::vector<cv::Point2f> CameraOpticalFlow::calcOpticalFlow(const cv::Mat& grayFrame)
+void CameraOpticalFlow::calc()
 {
-    // Validate input frame type
-    CV_Assert(grayFrame.type() == CV_8UC1);
-    CV_Assert(grayFrame.cols == static_cast<int>(m_frameSize.first));
-    CV_Assert(grayFrame.rows == static_cast<int>(m_frameSize.second));
+    cv::Mat grayFrame = m_drone->getGrayscaleImage();
 
-    if (!m_hasPrev) {
+    if (m_prevFrame.empty())
+    {
         m_prevFrame = grayFrame.clone();
-        m_hasPrev = true;
-        return std::vector<cv::Point2f>(m_frameSize.first * m_frameSize.second, cv::Point2f(0.0f, 0.0f));
     }
 
-    cv::Mat flow;
     cv::calcOpticalFlowFarneback(
-        m_prevFrame, grayFrame, flow,
+        m_prevFrame, grayFrame, m_opticalFlow,
         0.5,   // pyramid scale
         3,     // levels
         15,    // window size
@@ -32,15 +27,14 @@ std::vector<cv::Point2f> CameraOpticalFlow::calcOpticalFlow(const cv::Mat& grayF
         0      // flags
     );
 
-    std::vector<cv::Point2f> flowVec;
-    flowVec.reserve(m_frameSize.first * m_frameSize.second);
-
-    for (int y = 0; y < flow.rows; ++y) {
-        const cv::Point2f* rowPtr = flow.ptr<cv::Point2f>(y);
-        flowVec.insert(flowVec.end(), rowPtr, rowPtr + flow.cols);
-    }
-
     m_prevFrame = grayFrame.clone();
+}
 
-    return flowVec;
+cv::Point2f CameraOpticalFlow::getOpticalFlowAt(const int x, const int y) const
+{
+    if (m_opticalFlow.empty())
+    {
+        throw std::runtime_error("CameraOpticalFlow::getOpticalFlowAt called before calling CameraOpticalFlow::calc");
+    }
+    return m_opticalFlow.at<cv::Point2f>(y, x);
 }
