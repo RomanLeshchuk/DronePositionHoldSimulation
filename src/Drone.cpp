@@ -34,9 +34,9 @@ Drone::Drone(RemoteAPIObject::sim& sim) :
 
 [[nodiscard]] std::vector<double> Drone::getGyroData() const
 {
-    // gyroData[0] - rotation around horizontal forward-backward axis (roll)
-    // gyroData[1] - rotation around horizontal left-right axis (pitch)
-    // gyroData[2] - rotation around vertical axis (yaw)
+    // gyroData[0] - absolute rotation angle (not velocity) around horizontal forward-backward world axis (roll)
+    // gyroData[1] - absolute rotation angle (not velocity) around left-right world axis (pitch)
+    // gyroData[2] - absolute rotation angle (not velocity) around vertical world axis (yaw)
 
     json data = m_sim->callScriptFunction("getGyroData", m_gyroSensorScript)[0];
 

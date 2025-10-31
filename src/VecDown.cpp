@@ -73,11 +73,14 @@ cv::Point2f VecDown::calcVecDownProjection() const
         return {-1.0, -1.0};
     }
 
-    double x_screen =  f * (v[1] / depth);
-    double y_screen = -f * (v[0] / depth);
+    double x_screen = -f * (v[0] / depth);
+    double y_screen = f * (v[1] / depth);
 
     float u = m_drone->cameraInfo.resolutionX / 2.0 + x_screen;
     float v_scr = m_drone->cameraInfo.resolutionY / 2.0 + y_screen;
 
-    return {u, v_scr};
+    return {
+        std::max(std::min(u, static_cast<float>(m_drone->cameraInfo.resolutionX)), 0.0f),
+        std::max(std::min(v_scr, static_cast<float>(m_drone->cameraInfo.resolutionY)), 0.0f)
+    };
 }
