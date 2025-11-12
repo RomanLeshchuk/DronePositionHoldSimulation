@@ -12,22 +12,38 @@ class Drone
 public:
     struct CameraInfo
     {
-        double fov;
-        int resolutionX;
-        int resolutionY;
-        double minDist;
-        double maxDist;
+        CameraInfo(
+            const double fov,
+            const int resolutionX,
+            const int resolutionY,
+            const double minDist,
+            const double maxDist) :
+            fov{ fov },
+            resolutionX{ resolutionX },
+            resolutionY{ resolutionY },
+            minDist{ minDist },
+            maxDist{ maxDist },
+            focalLength{ resolutionX / (std::tan(fov / 2) * 2) }
+        {
+        }
+
+        const double fov;
+        const int resolutionX;
+        const int resolutionY;
+        const double minDist;
+        const double maxDist;
+        const double focalLength;
     };
 
     constexpr static std::uint64_t s_propellersCount = 4;
 
-    const CameraInfo cameraInfo{
+    const CameraInfo cameraInfo = CameraInfo(
         CV_PI / 2,
         512,
         512,
         0.01,
         1000.0
-    };
+    );
 
     const double kf = 3e-6;
     const double km = 3e-7;
@@ -52,7 +68,6 @@ private:
     std::array<std::int64_t, s_propellersCount> m_respondables;
     std::int64_t m_visionSensor;
     std::int64_t m_gyroSensorScript;
-    std::pair<int, int> m_cameraFrameSize;
 
     std::array<double, s_propellersCount> m_angularVelocities{};
 

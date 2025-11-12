@@ -17,15 +17,14 @@ Drone::Drone(RemoteAPIObject::sim& sim) :
     m_gyroSensorScript{ sim.getScript(sim.scripttype_childscript, "/Quadcopter/gyroSensor/Script") }
 {
     std::vector<std::int64_t> cameraFrameSize = std::get<1>(m_sim->getVisionSensorImg(m_visionSensor));
-    m_cameraFrameSize = { cameraFrameSize[0], cameraFrameSize[1] };
 }
 
 [[nodiscard]] cv::Mat Drone::getGrayscaleImage() const
 {
     std::vector<std::uint8_t> imgBytes = std::get<0>(m_sim->getVisionSensorImg(m_visionSensor));
     cv::Mat frame(
-        m_cameraFrameSize.second,
-        m_cameraFrameSize.first,
+        cameraInfo.resolutionY,
+        cameraInfo.resolutionX,
         CV_8UC3, imgBytes.data());
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     cv::flip(frame, frame, 0);

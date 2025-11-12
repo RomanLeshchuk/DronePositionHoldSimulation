@@ -9,7 +9,7 @@ CameraOpticalFlow::CameraOpticalFlow(const Drone& drone) :
 
 void CameraOpticalFlow::calc()
 {
-    cv::Mat grayFrame = m_drone->getGrayscaleImage();
+    const cv::Mat grayFrame = m_drone->getGrayscaleImage();
 
     if (m_prevFrame.empty())
     {
