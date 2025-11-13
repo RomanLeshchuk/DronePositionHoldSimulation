@@ -9,15 +9,15 @@
 void showOpticalFlow(const cv::Mat& grayFrame,
                      const VecMove& vecMove,
                      const std::pair<int, int>& frameSize,
-                     const int step = 8,
-                     const float resizeFactor = 1.5f)
+                     const int step,
+                     const float resizeFactor,
+                     const float dt)
 {
     cv::Mat display;
     cv::cvtColor(grayFrame, display, cv::COLOR_GRAY2BGR);
     cv::resize(display, display, cv::Size(), resizeFactor, resizeFactor, cv::INTER_LINEAR);
 
-    const cv::Point2f move = vecMove.getVecMove();
-    std::cout << move.x << ' ' << move.y << std::endl;
+    const cv::Point2f move = vecMove.getVecMove() / dt / 100;
 
     // === Axis parameters ===
     const int axisBoxSize = 100; // half-size of the coordinate box (in pixels)
@@ -72,7 +72,6 @@ void showOpticalFlow(const cv::Mat& grayFrame,
     cv::waitKey(1);
 }
 
-
 int main(int argc, char* argv[])
 {
     RemoteAPIClient client;
@@ -84,13 +83,18 @@ int main(int argc, char* argv[])
 
     VecMove vecMove(drone);
 
+    auto t1 = std::chrono::high_resolution_clock::now();
+
     while (true)
     {
         auto imgData = drone.getGrayscaleImage();
+
+        double dt = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - t1).count() / 1e6;
+        t1 = std::chrono::high_resolution_clock::now();
         if (!imgData.empty())
         {;
             vecMove.calc();
-            showOpticalFlow(imgData, vecMove, { drone.cameraInfo.resolutionX, drone.cameraInfo.resolutionY }, 16, 1.5);
+            showOpticalFlow(imgData, vecMove, { drone.cameraInfo.resolutionX, drone.cameraInfo.resolutionY }, 16, 1.5, dt);
         }
 
         if (cv::waitKey(10) == 27)

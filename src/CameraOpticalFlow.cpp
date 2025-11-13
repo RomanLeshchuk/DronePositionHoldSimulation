@@ -7,17 +7,29 @@ CameraOpticalFlow::CameraOpticalFlow(const Drone& drone) :
 {
 }
 
-void CameraOpticalFlow::calc()
+void CameraOpticalFlow::calc(const int x, const int y, const int len)
 {
-    const cv::Mat grayFrame = m_drone->getGrayscaleImage();
+    cv::Mat grayFrame = m_drone->getGrayscaleImage();
 
     if (m_prevFrame.empty())
     {
         m_prevFrame = grayFrame.clone();
+        m_opticalFlow = cv::Mat::zeros(grayFrame.size(), CV_32FC2);
+        return;
     }
 
+    int x0 = std::max(x - len, 0);
+    int y0 = std::max(y - len, 0);
+    int x1 = std::min(x + len, grayFrame.cols - 1);
+    int y1 = std::min(y + len, grayFrame.rows - 1);
+    cv::Rect roi(x0, y0, x1 - x0 + 1, y1 - y0 + 1);
+
+    cv::Mat prevROI = m_prevFrame(roi);
+    cv::Mat currROI = grayFrame(roi);
+
+    cv::Mat flowROI;
     cv::calcOpticalFlowFarneback(
-        m_prevFrame, grayFrame, m_opticalFlow,
+        prevROI, currROI, flowROI,
         0.5,   // pyramid scale
         3,     // levels
         15,    // window size
@@ -26,6 +38,8 @@ void CameraOpticalFlow::calc()
         1.2,   // poly_sigma
         0      // flags
     );
+
+    flowROI.copyTo(m_opticalFlow(roi));
 
     m_prevFrame = grayFrame.clone();
 }

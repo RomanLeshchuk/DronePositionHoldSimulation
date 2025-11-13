@@ -10,19 +10,10 @@ VecMove::VecMove(const Drone& drone) :
 void VecMove::calc()
 {
     m_vecDown.calc();
-    m_cameraOpticalFlow.calc();
 
     const cv::Point2f p = m_vecDown.getVecDown();
 
-    if (p.x < 0 || static_cast<int>(p.x) >= m_drone->cameraInfo.resolutionX
-        || p.y < 0 || static_cast<int>(p.y) >= m_drone->cameraInfo.resolutionY)
-    {
-        m_vecMove = p * s_noFlowBalanceVecMultiplier
-            / std::sqrt((m_drone->cameraInfo.resolutionX * m_drone->cameraInfo.resolutionX
-                + m_drone->cameraInfo.resolutionY * m_drone->cameraInfo.resolutionY
-            ));
-        return;
-    }
+    m_cameraOpticalFlow.calc(static_cast<int>(p.x), static_cast<int>(p.y), s_calcFlowPixels);
 
     cv::Point2f meanOpticalFlow{ 0.0f, 0.0f };
 
